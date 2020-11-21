@@ -11,8 +11,6 @@ public class ChunkGen : MonoBehaviour
         public float scaleMultiplier;
         [Range(0,1)]
         public float minHeight;
-        [Range(0, 1)]
-        public float maxHeight;
         [Range(0, 10)]
         public float angleMultiplier;
     }
@@ -29,33 +27,28 @@ public class ChunkGen : MonoBehaviour
 
     public MeshFilter world;
     public MeshCollider worldCollider;
+    [Header("Props")]
     public Art[] props;
-    
     [Header("WorldGenSettings")]
     public float vertDis;
     public float heightMultiplier;
-    public bool randomWorld;
     public int chunkSizeX;
     public int chunkSizeY;
-    [Header("NoisePasses")]
-    public NoisePass[] noisePasses;
     [Header("PerlinNoise")]
-    public CreatePerlinNoise perlinNoise;
+    public NoisePass[] noisePasses;
+    [Header("Debug")]
+    public bool resetChunk;
+    public Vector3[] locs;
     public float offsetX;
     public float offsetY;
-    [Header("Debug")]
-    public bool resetWorld;
-    public Vector3[] locs;
-    int tempChunkSizeX = 0;
-    int tempChunkSizeY = 0;
     public float stepX = 0;
     public float stepY = 0;
 
     private void Update()
     {
-        if (resetWorld)
+        if (resetChunk)
         {
-            resetWorld = false;
+            resetChunk = false;
             GenerateChunk();
         }
     }
@@ -69,8 +62,6 @@ public class ChunkGen : MonoBehaviour
     
     public void GenerateChunk()
     {
-        tempChunkSizeX = chunkSizeX;
-        tempChunkSizeY = chunkSizeY;
         Vector3[] verteciLoc = CreateVertGrid().ToArray();
         locs = verteciLoc;
         int[] triangles = triangelOrder();
@@ -91,9 +82,9 @@ public class ChunkGen : MonoBehaviour
         
         
         List<Vector3> grid = new List<Vector3>();
-        for (int z = 0; z < tempChunkSizeY; z++)
+        for (int z = 0; z < chunkSizeY; z++)
         {
-            for (int x = 0; x < tempChunkSizeX; x++)
+            for (int x = 0; x < chunkSizeX; x++)
             {
                 float finalNoise = 0;
                 float tempFinalNoise = 0;
@@ -101,14 +92,10 @@ public class ChunkGen : MonoBehaviour
                 {
                     float offSetCalculatedX = (transform.position.x / (chunkSizeX * vertDis) * noisePasses[i].scale) + offsetX;
                     float offSetCalculatedY = (transform.position.z / (chunkSizeY * vertDis) * noisePasses[i].scale) + offsetY;
-                    tempFinalNoise = perlinNoise.CalculatePerlinFloat(x, z, tempChunkSizeX, tempChunkSizeY, noisePasses[i].scale, offSetCalculatedX, offSetCalculatedY);
+                    tempFinalNoise = CalculatePerlinFloat(x, z, chunkSizeX, chunkSizeY, noisePasses[i].scale, offSetCalculatedX, offSetCalculatedY);
                     if(tempFinalNoise < noisePasses[i].minHeight)
                     {
                         tempFinalNoise = noisePasses[i].minHeight + (noisePasses[i].angleMultiplier * (tempFinalNoise * tempFinalNoise));
-                    }
-                    else if (tempFinalNoise > noisePasses[i].maxHeight)
-                    {
-                        tempFinalNoise = noisePasses[i].maxHeight + (noisePasses[i].angleMultiplier * ( tempFinalNoise * tempFinalNoise));
                     }
                     else
                     {
@@ -128,17 +115,17 @@ public class ChunkGen : MonoBehaviour
     {
         List<int> intList = new List<int>();
 
-        for (int y = 0; y < tempChunkSizeY - 1; y++)
+        for (int y = 0; y < chunkSizeY - 1; y++)
         {
-            for (int x = 0; x < tempChunkSizeX - 1; x++)
+            for (int x = 0; x < chunkSizeX - 1; x++)
             {
-                int i = x + (tempChunkSizeX * y);
+                int i = x + (chunkSizeX * y);
                 intList.Add(i);
-                intList.Add(i + tempChunkSizeX);
+                intList.Add(i + chunkSizeX);
                 intList.Add(i + 1);
 
-                intList.Add(i + tempChunkSizeX);
-                intList.Add(i + tempChunkSizeX + 1);
+                intList.Add(i + chunkSizeX);
+                intList.Add(i + chunkSizeX + 1);
                 intList.Add(i + 1);
             }
         }
@@ -174,5 +161,14 @@ public class ChunkGen : MonoBehaviour
             }
 
         }
+    }
+
+    float CalculatePerlinFloat(int x, int y, int width, int height, float scale, float offsetX, float offsetY)
+    {
+        float xCoord = (float)x / width * scale + offsetX;
+        float yCoord = (float)y / height * scale + offsetY;
+
+        float noicePixel = Mathf.PerlinNoise(xCoord, yCoord);
+        return noicePixel;
     }
 }

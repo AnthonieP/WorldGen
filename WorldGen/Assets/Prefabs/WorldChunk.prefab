@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5630515493339581613}
   - component: {fileID: 5630515493339581602}
-  - component: {fileID: 5630515493339581603}
   - component: {fileID: 5630515493339581615}
   - component: {fileID: 5630515493339581612}
   - component: {fileID: 5630515493339581614}
@@ -80,34 +79,27 @@ MonoBehaviour:
     propAngleSpanw: 0
   vertDis: 0.4
   heightMultiplier: 0.3
-  randomWorld: 0
   chunkSizeX: 100
   chunkSizeY: 100
   noisePasses:
   - scale: 0.5
     scaleMultiplier: 10
     minHeight: 0
-    maxHeight: 1
     angleMultiplier: 0
   - scale: 20
     scaleMultiplier: 0.02
     minHeight: 0
-    maxHeight: 1
     angleMultiplier: 0
   - scale: 0.5
     scaleMultiplier: 0.6
     minHeight: 0.5
-    maxHeight: 1
     angleMultiplier: 5
   - scale: 0.3
     scaleMultiplier: 80
     minHeight: 0
-    maxHeight: 1
     angleMultiplier: 0
-  perlinNoise: {fileID: 5630515493339581603}
-  offsetX: 0
-  offsetY: 0
-  resetWorld: 0
+  perlinNoise: {fileID: 0}
+  resetChunk: 0
   locs:
   - {x: 0, y: 0.90129924, z: 0}
   - {x: 0.2, y: 0.8916214, z: 0}
@@ -2609,20 +2601,10 @@ MonoBehaviour:
   - {x: 9.400001, y: 0.985522, z: 9.8}
   - {x: 9.6, y: 1.0203032, z: 9.8}
   - {x: 9.8, y: 1.0264405, z: 9.8}
+  offsetX: 0
+  offsetY: 0
   stepX: 9.8
   stepY: 9.8
---- !u!114 &5630515493339581603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5630515493339581600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 580c18f08528b2c40b1e8a83d75d8bff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!23 &5630515493339581615
 MeshRenderer:
   m_ObjectHideFlags: 0
